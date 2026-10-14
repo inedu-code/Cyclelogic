@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CycleLogic – AI Circular Economy Supply Chain Mapping & Recycling Analytics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ---------- RESET & BASE ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            color: #0a1628;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ---------- BUTTONS ---------- */
+        .btn-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, #059669, #047857);
+            color: #fff;
+            font-weight: 600;
+            padding: 14px 36px;
+            border-radius: 40px;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(5, 150, 105, 0.35);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(5, 150, 105, 0.5);
+        }
+        .btn-secondary {
+            display: inline-block;
+            background: transparent;
+            color: #059669;
+            font-weight: 600;
+            padding: 14px 36px;
+            border-radius: 40px;
+            border: 2px solid #059669;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background: rgba(5, 150, 105, 0.06);
+        }
+        .btn-outline-light {
+            display: inline-block;
+            background: transparent;
+            color: #fff;
+            font-weight: 600;
+            padding: 10px 24px;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-light:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: #34d399;
+        }
+        .btn-sm {
+            padding: 6px 16px;
+            border-radius: 30px;
+            border: 1px solid #d1d9e6;
+            background: #fff;
+            color: #475569;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .btn-sm:hover {
+            border-color: #059669;
+            color: #059669;
+        }
+        .btn-sm.active {
+            background: #059669;
+            color: #fff;
+            border-color: #059669;
+        }
+        .btn-match {
+            display: inline-block;
+            background: #059669;
+            color: #fff;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: none;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-match:hover {
+            background: #047857;
+        }
+
+        /* ---------- HEADER / NAV ---------- */
+        header {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(5, 150, 105, 0.08);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 999;
+            padding: 10px 0;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: #0a1628;
+        }
+        .logo span {
+            color: #059669;
+        }
+        .logo .cycle-icon {
+            display: inline-block;
+            margin-right: 4px;
+            color: #059669;
+        }
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            list-style: none;
+            font-weight: 500;
+            color: #475569;
+        }
+        .nav-links a {
+            transition: color 0.2s;
+        }
+        .nav-links a:hover {
+            color: #059669;
+        }
+        .nav-links .btn-primary {
+            padding: 8px 22px;
+            font-size: 0.85rem;
+        }
+        .hamburger {
+            display: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: #0a1628;
+        }
+
+        /* ---------- HERO ---------- */
+        .hero {
+            padding: 150px 0 80px;
+            background: linear-gradient(145deg, #ecfdf5 0%, #d1fae5 40%, #ffffff 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '♻️';
+            position: absolute;
+            top: -5%;
+            right: -3%;
+            font-size: 20rem;
+            opacity: 0.04;
+            transform: rotate(10deg);
+        }
+        .hero .container {
+            position: relative;
+            z-index: 2;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(5, 150, 105, 0.10);
+            color: #059669;
+            padding: 6px 20px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(5, 150, 105, 0.12);
+        }
+        .hero-badge i {
+            margin-right: 8px;
+        }
+        .hero h1 {
+            font-size: 3.8rem;
+            font-weight: 800;
+            line-height: 1.12;
+            color: #0a1628;
+            max-width: 900px;
+            margin: 0 auto 20px;
+        }
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, #059669, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: #475569;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .hero-stats {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 30px 40px;
+            border: 1px solid rgba(5, 150, 105, 0.08);
+        }
+        .hero-stats .stat-item {
+            text-align: center;
+        }
+        .hero-stats .stat-item .number {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #059669;
+        }
+        .hero-stats .stat-item .label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        /* ---------- SECTIONS GENERAL ---------- */
+        section {
+            padding: 80px 0;
+        }
+        .section-title {
+            font-size: 2.6rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 16px;
+            color: #0a1628;
+        }
+        .section-title .highlight {
+            background: linear-gradient(135deg, #059669, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .section-sub {
+            text-align: center;
+            color: #64748b;
+            max-width: 720px;
+            margin: 0 auto 50px;
+            font-size: 1.2rem;
+        }
+        .section-light {
+            background: #ffffff;
+        }
+        .section-emerald {
+            background: #ecfdf5;
+        }
+
+        /* ---------- WHAT WE DO ---------- */
+        .what-we-do {
+            background: #ffffff;
+        }
+        .wwd-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+        .wwd-grid .text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+            color: #0a1628;
+        }
+        .wwd-grid .text p {
+            color: #475569;
+            margin-bottom: 16px;
+        }
+        .wwd-grid .visual {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(5, 150, 105, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        .wwd-grid .visual .cycle-bg {
+            position: absolute;
+            font-size: 12rem;
+            opacity: 0.04;
+            right: -20px;
+            bottom: -30px;
+            transform: rotate(-10deg);
+        }
+        .wwd-grid .visual i {
+            font-size: 4rem;
+            color: #059669;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
+        }
+        .wwd-grid .visual p {
+            color: #475569;
+            position: relative;
+            z-index: 2;
+        }
+        .wwd-grid .visual .highlight-text {
+            color: #059669;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ---------- PLATFORM (AI FEATURES) ---------- */
+        .platform {
+            background: #ecfdf5;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .feature-card {
+            background: #ffffff;
+            padding: 32px 24px;
+            border-radius: 20px;
+            border: 1px solid rgba(5, 150, 105, 0.06);
+            transition: 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #059669, #34d399);
+            opacity: 0;
+            transition: 0.3s;
+        }
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(5, 150, 105, 0.08);
+            border-color: rgba(5, 150, 105, 0.12);
+        }
+        .feature-card .icon-wrapper {
+            width: 56px;
+            height: 56px;
+            background: #ecfdf5;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        .feature-card .icon-wrapper i {
+            font-size: 1.8rem;
+            color: #059669;
+        }
+        .feature-card h4 {
+            font-size: 1.2rem;
+            color: #0a1628;
+            margin-bottom: 10px;
+        }
+        .feature-card p {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+        .feature-card .tag {
+            display: inline-block;
+            background: #ecfdf5;
+            color: #059669;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: 20px;
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* ---------- WASTE MATCHING SIMULATOR ---------- */
+        .matcher {
+            background: #ffffff;
+            padding: 60px 0;
+        }
+        .matcher .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+        .matcher .matcher-main {
+            background: #ecfdf5;
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid rgba(5, 150, 105, 0.06);
+        }
+        .matcher .matcher-main .matcher-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .matcher .matcher-main .matcher-header .status-text i {
+            color: #22c55e;
+            margin-right: 8px;
+        }
+        .matcher .matcher-main .input-panel {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(5, 150, 105, 0.06);
+            margin-bottom: 16px;
+        }
+        .matcher .matcher-main .input-panel .input-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .matcher .matcher-main .input-panel .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .matcher .matcher-main .input-panel .input-row input,
+        .matcher .matcher-main .input-panel .input-row select {
+            padding: 10px 14px;
+            border: 1px solid #d1d9e6;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            background: #fff;
+            color: #0a1628;
+            transition: 0.2s;
+            width: 100%;
+        }
+        .matcher .matcher-main .input-panel .input-row input:focus,
+        .matcher .matcher-main .input-panel .input-row select:focus {
+            border-color: #059669;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.08);
+        }
+        .matcher .matcher-main .input-panel .btn-row {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .matcher .matcher-main .matches-panel {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(5, 150, 105, 0.06);
+        }
+        .matcher .matcher-main .matches-panel .matches-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        .matcher .matcher-main .matches-panel .match-card {
+            display: grid;
+            grid-template-columns: 44px 1fr 100px 80px;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+        .matcher .matcher-main .matches-panel .match-card:last-child {
+            border-bottom: none;
+        }
+        .matcher .matcher-main .matches-panel .match-card .facility-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #d1fae5;
+            color: #059669;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        .matcher .matcher-main .matches-panel .match-card .facility-info .facility-name {
+            font-weight: 600;
+            color: #0a1628;
+        }
+        .matcher .matcher-main .matches-panel .match-card .facility-info .facility-detail {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+        .matcher .matcher-main .matches-panel .match-card .match-score {
+            text-align: center;
+            font-weight: 700;
+            color: #059669;
+            font-size: 0.85rem;
+        }
+        .matcher .matcher-main .matches-panel .match-card .match-score .score-bar {
+            display: block;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+        .matcher .matcher-main .matches-panel .match-card .match-score .score-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #059669, #34d399);
+            border-radius: 2px;
+        }
+        .matcher .matcher-main .matches-panel .match-card .match-action {
+            text-align: center;
+        }
+        .matcher .matcher-sidebar {
+            background: #ecfdf5;
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid rgba(5, 150, 105, 0.06);
+        }
+        .matcher .matcher-sidebar h4 {
+            color: #0a1628;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+        .matcher .matcher-sidebar .metric-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(5, 150, 105, 0.06);
+            font-size: 0.9rem;
+            color: #475569;
+        }
+        .matcher .matcher-sidebar .metric-item:last-child {
+            border-bottom: none;
+        }
+        .matcher .matcher-sidebar .metric-item .value {
+            font-weight: 700;
+        }
+        .matcher .matcher-sidebar .metric-item .value.good { color: #22c55e; }
+        .matcher .matcher-sidebar .metric-item .value.warning { color: #f59e0b; }
+        .matcher .matcher-sidebar .metric-item .value.danger { color: #ef4444; }
+        .matcher .matcher-sidebar .flow-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(5, 150, 105, 0.06);
+            color: #475569;
+            font-size: 0.85rem;
+        }
+        .matcher .matcher-sidebar .flow-item:last-child {
+            border-bottom: none;
+        }
+        .matcher .matcher-sidebar .flow-item .flow-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+            background: #d1fae5;
+            color: #059669;
+        }
+        .matcher .matcher-sidebar .diversion-bar {
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid rgba(5, 150, 105, 0.06);
+        }
+        .matcher .matcher-sidebar .diversion-bar .bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+        .matcher .matcher-sidebar .diversion-bar .bar-track {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+        .matcher .matcher-sidebar .diversion-bar .bar-track .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #059669, #34d399);
+            border-radius: 4px;
+            transition: width 1s ease;
+            width: 82%;
+        }
+
+        /* ---------- WHY CYCLELOGIC ---------- */
+        .why {
+            background: #ecfdf5;
+        }
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+        .why-grid .why-item {
+            padding: 30px 20px;
+            border-radius: 20px;
+            background: #ffffff;
+            border: 1px solid rgba(5, 150, 105, 0.06);
+            transition: 0.3s;
+        }
+        .why-grid .why-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(5, 150, 105, 0.06);
+        }
+        .why-grid .why-item .number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #059669;
+        }
+        .why-grid .why-item p {
+            color: #475569;
+            font-weight: 500;
+        }
+
+        /* ---------- WHO WE SERVE ---------- */
+        .serve {
+            background: #ffffff;
+        }
+        .serve-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+        }
+        .serve-card {
+            background: #ecfdf5;
+            padding: 30px 20px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(5, 150, 105, 0.04);
+            transition: 0.3s;
+        }
+        .serve-card:hover {
+            border-color: rgba(5, 150, 105, 0.12);
+            transform: translateY(-4px);
+        }
+        .serve-card i {
+            font-size: 2.6rem;
+            color: #059669;
+            margin-bottom: 12px;
+        }
+        .serve-card h4 {
+            font-size: 1.2rem;
+            color: #0a1628;
+        }
+        .serve-card p {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        /* ---------- TESTIMONIALS ---------- */
+        .testimonials {
+            background: #ecfdf5;
+        }
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        .testimonial-card {
+            background: #ffffff;
+            padding: 28px 24px;
+            border-radius: 20px;
+            border: 1px solid rgba(5, 150, 105, 0.06);
+        }
+        .testimonial-card .quote {
+            font-size: 1rem;
+            color: #334155;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+        .testimonial-card .author {
+            font-weight: 600;
+            color: #0a1628;
+        }
+        .testimonial-card .role {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        .testimonial-card .stars {
+            color: #f59e0b;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+
+        /* ---------- TEAM ---------- */
+        .team {
+            background: #ffffff;
+        }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 35px;
+        }
+        .team-card {
+            text-align: center;
+            background: #ecfdf5;
+            padding: 28px 20px 24px;
+            border-radius: 24px;
+            transition: 0.3s ease;
+            border: 1px solid transparent;
+        }
+        .team-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(5, 150, 105, 0.12);
+            box-shadow: 0 20px 40px rgba(5, 150, 105, 0.06);
+        }
+        .team-card .avatar-img {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            margin-bottom: 14px;
+        }
+        .team-card h4 {
+            font-size: 1.1rem;
+            color: #0a1628;
+            margin-bottom: 2px;
+        }
+        .team-card .title {
+            color: #059669;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .team-card .bio {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin: 8px 0 12px;
+        }
+        .team-card .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+        .team-card .social-icons a {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            transition: 0.2s;
+        }
+        .team-card .social-icons a:hover {
+            color: #059669;
+        }
+
+        /* ---------- CONTACT ---------- */
+        .contact {
+            background: #ecfdf5;
+        }
+        .contact-wrap {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+        }
+        .contact-form input,
+        .contact-form textarea,
+        .contact-form select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #d1d9e6;
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-bottom: 16px;
+            background: #ffffff;
+            color: #0a1628;
+            transition: 0.2s;
+        }
+        .contact-form input:focus,
+        .contact-form textarea:focus,
+        .contact-form select:focus {
+            border-color: #059669;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.08);
+        }
+        .contact-form textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .contact-form select option {
+            background: #ffffff;
+        }
+        .contact-info p {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #475569;
+        }
+        .contact-info i {
+            width: 24px;
+            color: #059669;
+        }
+        .contact-info .emergency-box {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 16px;
+            border-left: 4px solid #059669;
+            margin-top: 20px;
+        }
+        .contact-info .emergency-box h4 {
+            color: #059669;
+        }
+
+        /* ---------- GET STARTED ---------- */
+        .get-started {
+            background: linear-gradient(135deg, #0a1628, #064e3b);
+            color: #fff;
+            text-align: center;
+        }
+        .get-started h2 {
+            font-size: 2.6rem;
+        }
+        .get-started h2 .highlight {
+            background: linear-gradient(135deg, #34d399, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .get-started p {
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 16px auto 32px;
+        }
+        .get-started .steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            margin: 40px 0 30px;
+        }
+        .get-started .steps .step {
+            flex: 1 1 180px;
+        }
+        .get-started .steps .step .num {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #34d399;
+        }
+        .get-started .steps .step h4 {
+            color: #fff;
+        }
+        .get-started .steps .step p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        /* ---------- FOOTER ---------- */
+        footer {
+            background: #060e14;
+            color: #94a3b8;
+            padding: 40px 0 20px;
+            border-top: 1px solid rgba(5, 150, 105, 0.06);
+        }
+        footer .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        footer .footer-grid h4 {
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        footer .footer-grid a {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+        footer .footer-grid a:hover {
+            color: #34d399;
+        }
+        footer .bottom {
+            border-top: 1px solid rgba(255,255,255,0.04);
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+        }
+        footer .social i {
+            font-size: 1.4rem;
+            margin-left: 16px;
+            transition: 0.2s;
+        }
+        footer .social i:hover {
+            color: #34d399;
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 1024px) {
+            .matcher .container {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 900px) {
+            .hero h1 { font-size: 2.6rem; }
+            .wwd-grid { grid-template-columns: 1fr; }
+            .contact-wrap { grid-template-columns: 1fr; }
+            footer .footer-grid { grid-template-columns: 1fr 1fr; }
+            .matcher .matcher-main .input-panel .input-row {
+                grid-template-columns: 1fr;
+            }
+            .matcher .matcher-main .matches-panel .match-card {
+                grid-template-columns: 40px 1fr 80px 60px;
+                font-size: 0.75rem;
+                gap: 8px;
+            }
+        }
+        @media (max-width: 700px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                background: #ffffff;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                width: 100%;
+                padding: 30px 24px;
+                gap: 18px;
+                border-bottom: 1px solid rgba(5, 150, 105, 0.08);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .hamburger {
+                display: block;
+            }
+            .hero {
+                padding: 120px 0 60px;
+            }
+            .hero h1 { font-size: 2rem; }
+            .hero-stats {
+                gap: 30px;
+                padding: 20px;
+            }
+            .why-grid { grid-template-columns: 1fr 1fr; }
+            .testimonial-grid { grid-template-columns: 1fr; }
+            footer .footer-grid { grid-template-columns: 1fr; }
+            .matcher .matcher-main .matches-panel .match-card {
+                grid-template-columns: 1fr;
+                gap: 4px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header>
+        <nav class="container">
+            <div class="logo"><span class="cycle-icon">♻️</span>Cycle<span>Logic</span></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#what">What We Do</a></li>
+                <li><a href="#platform">Platform</a></li>
+                <li><a href="#why">Why CycleLogic</a></li>
+                <li><a href="#serve">Who We Serve</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#team">Team</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#getstarted" class="btn-primary">Get Started</a></li>
+            </ul>
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-badge"><i class="fas fa-recycle"></i> Circular Economy • AI Matching • Waste-to-Revenue</div>
+            <h1>Turn Your Waste Streams into <span class="highlight">Revenue Streams</span></h1>
+            <p>AI-powered circular economy mapping that connects your manufacturing scraps with nearby factories that need them as raw material inputs — turning disposal costs into new revenue.</p>
+            <div class="hero-buttons">
+                <a href="#getstarted" class="btn-primary"><i class="fas fa-recycle"></i> Start Free Trial</a>
+                <a href="#platform" class="btn-secondary">Explore the Platform</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="number">18K+</div>
+                    <div class="label">Industrial Facilities Mapped</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number">94%</div>
+                    <div class="label">Match Accuracy</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number">$142M</div>
+                    <div class="label">Waste Revenue Generated</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== WHAT WE DO ===== -->
+    <section id="what" class="what-we-do">
+        <div class="container">
+            <div class="wwd-grid">
+                <div class="text">
+                    <h3>One Factory's Waste is <span style="color:#059669;">Another Factory's Gold</span></h3>
+                    <p><strong>The Challenge:</strong> Manufacturers generate millions of tons of scrap — fabric offcuts, metal dust, plastic pellets, chemical byproducts — that get landfilled or incinerated at significant cost. Meanwhile, other factories pay premium prices for virgin raw materials.</p>
+                    <p><strong>The CycleLogic Solution:</strong> Our AI maps <strong>global raw material outputs and industrial waste streams</strong> in real-time. Using generative matching algorithms, we identify nearby facilities that can use your production scraps as manufacturing ingredients. We handle logistics, quality verification, and transaction support — turning your disposal cost into new revenue.</p>
+                    <p style="font-weight:600; color:#059669;">✅ 18K+ Facilities • ✅ 94% Match Accuracy • ✅ Verified Supply Chains</p>
+                </div>
+                <div class="visual">
+                    <div class="cycle-bg">♻️</div>
+                    <i class="fas fa-sync-alt"></i>
+                    <p style="font-size:1.2rem; font-weight:600; color:#0a1628;">AI Circular Economy Engine</p>
+                    <p><span class="highlight-text">🏭 Waste Out</span> → <span class="highlight-text">⚡ AI Matching</span> → <span class="highlight-text">🏭 Raw Material In</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PLATFORM (AI FEATURES) ===== -->
+    <section id="platform" class="platform">
+        <div class="container">
+            <h2 class="section-title">The <span class="highlight">Circular Economy</span> AI Stack</h2>
+            <p class="section-sub">Four AI layers that transform industrial waste into valuable raw materials.</p>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="icon-wrapper"><i class="fas fa-map-marked-alt"></i></div>
+                    <h4>Global Supply Chain Mapping</h4>
+                    <p>AI maps industrial facilities, material flows, and waste outputs across 18,000+ sites worldwide — creating a live graph of who produces what and who needs it.</p>
+                    <span class="tag">Global Mapping</span>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-wrapper"><i class="fas fa-brain"></i></div>
+                    <h4>Generative Waste Matching</h4>
+                    <p>Generative AI identifies non-obvious connections — matching scrap fabric from a textile mill with an insulation manufacturer 40 miles away that needs cellulose fiber.</p>
+                    <span class="tag">Generative AI</span>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-wrapper"><i class="fas fa-flask"></i></div>
+                    <h4>Material Quality Verification</h4>
+                    <p>AI analyzes material composition, purity, and processing requirements — ensuring that waste streams meet the specifications of receiving facilities.</p>
+                    <span class="tag">Quality AI</span>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-wrapper"><i class="fas fa-truck"></i></div>
+                    <h4>Logistics & Transaction Support</h4>
+                    <p>End-to-end coordination of transport, pricing, and compliance — with integrated carbon accounting to quantify the environmental benefit of every match.</p>
+                    <span class="tag">Logistics • Carbon</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== WASTE MATCHING SIMULATOR ===== -->
+    <section class="matcher">
+        <div class="container">
+            <div class="matcher-main">
+                <div class="matcher-header">
+                    <span class="status-text"><i class="fas fa-circle" style="color:#22c55e;"></i> LIVE — CycleLogic Waste Match Engine</span>
+                    <span style="color:#64748b;">AI Confidence: 94.7%</span>
+                </div>
+                <div class="input-panel">
+                    <div class="input-label">Your Waste Stream Profile</div>
+                    <div class="input-row">
+                        <input type="text" id="wasteType" placeholder="Waste type (e.g., scrap fabric, metal dust, plastic pellets)" value="Scrap cotton fabric" />
+                        <input type="text" id="wasteVolume" placeholder="Monthly volume (tons)" value="45 tons/month" />
+                    </div>
+                    <div class="input-row">
+                        <input type="text" id="wasteLocation" placeholder="Facility location" value="Charlotte, NC" />
+                        <select id="wasteRadius">
+                            <option value="50">Within 50 miles</option>
+                            <option value="150" selected>Within 150 miles</option>
+                            <option value="300">Within 300 miles</option>
+                            <option value="500">Within 500 miles</option>
+                        </select>
+                    </div>
+                    <div class="btn-row">
+                        <button class="btn-secondary" style="padding:8px 20px; font-size:0.85rem;" onclick="resetMatcher()">Reset</button>
+                        <button class="btn-primary" style="padding:8px 20px; font-size:0.85rem;" id="matchBtn"><i class="fas fa-search"></i> Find Matches</button>
+                    </div>
+                </div>
+                <div class="matches-panel">
+                    <div class="matches-header">
+                        <span>🏭 Facilities Ready to Buy Your Waste</span>
+                        <span id="matchesCount">5 matches</span>
+                    </div>
+                    <div id="matchesList">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            <div class="matcher-sidebar">
+                <h4><i class="fas fa-chart-bar" style="color:#059669;"></i> Circularity Metrics</h4>
+                <div class="metric-item"><span>♻️ Waste Diverted</span><span class="value good" id="wasteDiverted">540 t/yr</span></div>
+                <div class="metric-item"><span>💰 Revenue Potential</span><span class="value good" id="revenuePotential">$108K/yr</span></div>
+                <div class="metric-item"><span>🌍 CO₂ Avoided</span><span class="value good" id="co2Avoided">1,240 t/yr</span></div>
+                <div class="metric-item"><span>🚛 Avg. Distance</span><span class="value warning" id="avgDistance">87 mi</span></div>
+                <div style="margin-top:12px;">
+                    <h4><i class="fas fa-exchange-alt" style="color:#059669;"></i> Active Material Flows</h4>
+                    <div id="flowList">
+                        <div class="flow-item">
+                            <span class="flow-icon"><i class="fas fa-tshirt"></i></span>
+                            <div><strong>Cotton Scrap</strong><br /><span style="font-size:0.8rem;">→ Insulation Co.</span></div>
+                        </div>
+                        <div class="flow-item">
+                            <span class="flow-icon"><i class="fas fa-cog"></i></span>
+                            <div><strong>Metal Dust</strong><br /><span style="font-size:0.8rem;">→ Alloy Recycler</span></div>
+                        </div>
+                        <div class="flow-item">
+                            <span class="flow-icon"><i class="fas fa-box"></i></span>
+                            <div><strong>HDPE Pellets</strong><br /><span style="font-size:0.8rem;">→ Packaging Mfr.</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="diversion-bar">
+                    <div class="bar-label">
+                        <span>Landfill Diversion Rate</span>
+                        <span id="diversionLabel">82%</span>
+                    </div>
+                    <div class="bar-track"><div class="fill" id="diversionFill" style="width:82%;"></div></div>
+                    <div style="font-size:0.7rem; color:#94a3b8; margin-top:4px;">
+                        <i class="fas fa-info-circle"></i> vs. previous disposal method
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== WHY CYCLELOGIC ===== -->
+    <section id="why" class="why">
+        <div class="container">
+            <h2 class="section-title">The <span class="highlight">Circular Economy</span> Impact</h2>
+            <p class="section-sub">Real outcomes from manufacturers using our platform.</p>
+            <div class="why-grid">
+                <div class="why-item">
+                    <div class="number">18K+</div>
+                    <p>Industrial facilities mapped and continuously monitored</p>
+                </div>
+                <div class="why-item">
+                    <div class="number">94%</div>
+                    <p>Waste-to-material match accuracy</p>
+                </div>
+                <div class="why-item">
+                    <div class="number">$142M</div>
+                    <p>New revenue generated for our manufacturing partners</p>
+                </div>
+                <div class="why-item">
+                    <div class="number">2.4M</div>
+                    <p>Tons of waste diverted from landfill annually</p>
+                </div>
+            </div>
+            <div style="text-align:center; margin-top:30px; background:#d1fae5; padding:24px; border-radius:20px; border:1px solid rgba(5,150,105,0.08);">
+                <p style="font-size:1.1rem; font-weight:500; color:#059669;"><i class="fas fa-recycle"></i> "The circular economy isn't just good for the planet — it's good for the bottom line."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== WHO WE SERVE ===== -->
+    <section id="serve" class="serve">
+        <div class="container">
+            <h2 class="section-title">Built for <span class="highlight">Industrial Manufacturers</span></h2>
+            <p class="section-sub">CycleLogic empowers every stakeholder in the industrial value chain.</p>
+            <div class="serve-grid">
+                <div class="serve-card">
+                    <i class="fas fa-industry"></i>
+                    <h4>Manufacturers</h4>
+                    <p>Turn disposal costs into revenue by selling scrap and byproducts to verified buyers.</p>
+                </div>
+                <div class="serve-card">
+                    <i class="fas fa-boxes"></i>
+                    <h4>Raw Material Buyers</h4>
+                    <p>Source cost-effective recycled inputs from verified industrial waste streams.</p>
+                </div>
+                <div class="serve-card">
+                    <i class="fas fa-recycle"></i>
+                    <h4>Recyclers & Processors</h4>
+                    <p>Access new feedstock streams and expand your processing network.</p>
+                </div>
+                <div class="serve-card">
+                    <i class="fas fa-leaf"></i>
+                    <h4>Sustainability Teams</h4>
+                    <p>Quantify and report circular economy metrics for ESG disclosures.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TESTIMONIALS ===== -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What <span class="highlight">Industry Leaders</span> Say</h2>
+            <p class="section-sub">Trusted by manufacturers worldwide.</p>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="quote">“CycleLogic found a buyer for our scrap cotton fabric 40 miles away. We went from paying $8K/month for disposal to earning $14K/month selling it. The payback was immediate.”</p>
+                    <p class="author">— Sarah Chen</p>
+                    <p class="role">Operations Director, Textile Corp</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="quote">“The AI matched our metal dust with an alloy recycler we didn't know existed. We now source 30% of our raw material inputs from verified waste streams — saving $2.4M annually.”</p>
+                    <p class="author">— Marcus Johnson</p>
+                    <p class="role">VP of Procurement, Steel Dynamics</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="quote">“The carbon accounting gave us the data we needed for our ESG report. We've diverted 12,000 tons of waste from landfill and documented every ton. Our investors love it.”</p>
+                    <p class="author">— Dr. Elena Rodriguez</p>
+                    <p class="role">Chief Sustainability Officer, Unilever</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TEAM ===== -->
+    <section id="team" class="team">
+        <div class="container">
+            <h2 class="section-title">The <span class="highlight">Circular Economy</span> Team</h2>
+            <p class="section-sub">Supply chain experts, AI researchers, and sustainability veterans united to eliminate waste.</p>
+            <div class="team-grid">
+                <div class="team-card">
+                    <img src="https://randomuser.me/api/portraits/women/72.jpg" alt="Dr. Aisha Patel" class="avatar-img" />
+                    <h4>Dr. Aisha Patel</h4>
+                    <p class="title">CEO & Co-Founder</p>
+                    <p class="bio">Supply chain economist with 15+ years in industrial materials. Former McKinsey partner.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-x-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Dr. Michael Chen" class="avatar-img" />
+                    <h4>Dr. Michael Chen</h4>
+                    <p class="title">CTO & Co-Founder</p>
+                    <p class="bio">AI/ML Ph.D. specializing in supply chain optimization and generative matching algorithms.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Dr. Lisa Okafor" class="avatar-img" />
+                    <h4>Dr. Lisa Okafor</h4>
+                    <p class="title">Head of Materials Science</p>
+                    <p class="bio">Materials chemist. Ensures every matched waste stream meets quality specifications.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="https://randomuser.me/api/portraits/men/55.jpg" alt="David Kim" class="avatar-img" />
+                    <h4>David Kim</h4>
+                    <p class="title">VP of Product</p>
+                    <p class="bio">Product leader with deep experience in supply chain visibility and B2B marketplaces.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-x-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Ready to <span class="highlight">Monetize</span> Your Waste Streams?</h2>
+            <p class="section-sub">Tell us about your waste profile, and we'll show you how CycleLogic can help.</p>
+            <div class="contact-wrap">
+                <form class="contact-form" id="contactForm">
+                    <input type="text" placeholder="Full Name" required />
+                    <input type="text" placeholder="Company Name" required />
+                    <input type="email" placeholder="Work Email" required />
+                    <input type="tel" placeholder="Phone Number" />
+                    <select>
+                        <option value="">Select your primary role</option>
+                        <option>Manufacturer</option>
+                        <option>Raw Material Buyer</option>
+                        <option>Recycler / Processor</option>
+                        <option>Sustainability / ESG Lead</option>
+                        <option>Logistics Provider</option>
+                    </select>
+                    <input type="text" placeholder="Primary waste stream type (e.g., scrap fabric, metal dust)" />
+                    <textarea placeholder="Describe your waste disposal challenges and sustainability goals"></textarea>
+                    <button type="submit" class="btn-primary" style="width:100%;"><i class="fas fa-recycle"></i> Request a Demo</button>
+                </form>
+                <div class="contact-info">
+                    <p><i class="fas fa-envelope"></i> info@cyclelogic.ai</p>
+                    <p><i class="fas fa-phone-alt"></i> +1 (888) 555-CYCLE (2925) – 24/7 support</p>
+                    <p><i class="fas fa-map-pin"></i> 440 Circular Way, Suite 300, Atlanta, GA 30301</p>
+                    <div class="emergency-box">
+                        <h4><i class="fas fa-exchange-alt"></i> Custom Material Flow Solutions</h4>
+                        <p>Have a complex or unusual waste stream? Our materials team can design a custom circular economy solution — from identification to logistics and transaction support.</p>
+                        <p style="color:#059669; font-weight:600;">+1 (888) 555-CYCLE (2925) ext. 911</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== GET STARTED ===== -->
+    <section id="getstarted" class="get-started">
+        <div class="container">
+            <h2>Start <span class="highlight">Monetizing</span> Your Waste Today</h2>
+            <p>Deploy CycleLogic in your operation in days. Start matching, selling, and diverting.</p>
+            <div class="steps">
+                <div class="step">
+                    <div class="num">1</div>
+                    <h4>Profile</h4>
+                    <p>Tell us what you produce, what you discard, and where you're located.</p>
+                </div>
+                <div class="step">
+                    <div class="num">2</div>
+                    <h4>Match</h4>
+                    <p>Our AI identifies nearby facilities that can use your waste as raw material.</p>
+                </div>
+                <div class="step">
+                    <div class="num">3</div>
+                    <h4>Transact</h4>
+                    <p>We coordinate quality verification, logistics, and payment — turning waste into revenue.</p>
+                </div>
+            </div>
+            <a href="#contact" class="btn-primary" style="background:linear-gradient(135deg, #34d399, #059669); box-shadow: 0 8px 30px rgba(5,150,105,0.4);"><i class="fas fa-rocket"></i> Start Your Free Trial</a>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="logo" style="color:#fff; font-size:1.6rem;"><span class="cycle-icon" style="color:#34d399;">♻️</span>Cycle<span style="color:#34d399;">Logic</span></div>
+                    <p style="margin-top:10px; max-width:280px; font-size:0.95rem;">AI-powered circular economy supply chain mapping and recycling analytics for industrial manufacturers.</p>
+                </div>
+                <div>
+                    <h4>Platform</h4>
+                    <a href="#platform">AI Features</a>
+                    <a href="#why">Why CycleLogic</a>
+                    <a href="#testimonials">Case Studies</a>
+                    <a href="#contact">Support</a>
+                </div>
+                <div>
+                    <h4>Legal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Compliance</a>
+                    <a href="#">Industry Standards</a>
+                </div>
+                <div>
+                    <h4>Connect</h4>
+                    <div class="social">
+                        <i class="fab fa-linkedin"></i>
+                        <i class="fab fa-youtube"></i>
+                        <i class="fab fa-x-twitter"></i>
+                        <i class="fab fa-github"></i>
+                    </div>
+                    <p style="margin-top:12px; font-size:0.85rem;">📬 info@cyclelogic.ai</p>
+                    <p style="font-size:0.85rem;">📞 +1 (888) 555-CYCLE</p>
+                </div>
+            </div>
+            <div class="bottom">
+                <span>&copy; 2026 CycleLogic. All rights reserved.</span>
+                <span><i class="fas fa-recycle" style="color:#34d399;"></i> AI for the circular economy</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // Hamburger toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+            });
+        });
+
+        // ===== WASTE MATCHING SIMULATOR =====
+        const matchesList = document.getElementById('matchesList');
+        const matchesCount = document.getElementById('matchesCount');
+        const wasteType = document.getElementById('wasteType');
+        const wasteVolume = document.getElementById('wasteVolume');
+        const wasteLocation = document.getElementById('wasteLocation');
+        const wasteRadius = document.getElementById('wasteRadius');
+        const matchBtn = document.getElementById('matchBtn');
+
+        const facilityDatabase = {
+            'scrap cotton fabric': [
+                { name: 'EcoInsulate Manufacturing', detail: 'Cellulose insulation producer', distance: 42, match: 96, price: '$280/t' },
+                { name: 'GreenFiber Composites', detail: 'Bio-composite manufacturer', distance: 67, match: 93, price: '$260/t' },
+                { name: 'Carolina Paper Mills', detail: 'Recycled paper products', distance: 88, match: 89, price: '$220/t' },
+                { name: 'Southeast Textile Recycling', detail: 'Fiber reclamation facility', distance: 103, match: 86, price: '$195/t' },
+                { name: 'Appalachian Absorbents', detail: 'Industrial absorbent producer', distance: 124, match: 82, price: '$175/t' },
+            ],
+            'metal dust': [
+                { name: 'Steel Dynamics Recycler', detail: 'Ferrous alloy producer', distance: 34, match: 97, price: '$340/t' },
+                { name: 'Alcoa Secondary Smelting', detail: 'Aluminum recycler', distance: 58, match: 94, price: '$320/t' },
+                { name: 'Precision Alloys Inc', detail: 'Specialty alloy manufacturer', distance: 76, match: 91, price: '$295/t' },
+                { name: 'Southeast Metals Recovery', detail: 'Mixed metal processor', distance: 92, match: 88, price: '$265/t' },
+                { name: 'Carolina Foundry Supply', detail: 'Foundry raw material supplier', distance: 118, match: 83, price: '$230/t' },
+            ],
+            'plastic pellets': [
+                { name: 'GreenPack Industries', detail: 'Recycled packaging manufacturer', distance: 28, match: 98, price: '$420/t' },
+                { name: 'PolyCycle Corp', detail: 'HDPE/PP recycler', distance: 45, match: 95, price: '$395/t' },
+                { name: 'Southeast Plastics', detail: 'Injection molding supplier', distance: 67, match: 92, price: '$365/t' },
+                { name: 'Carolina Polymer Works', detail: 'Custom plastic compounder', distance: 89, match: 88, price: '$335/t' },
+                { name: 'Atlantic Recycled Resins', detail: 'Resin reprocessor', distance: 112, match: 84, price: '$305/t' },
+            ],
+        };
+
+        function getFacilityIcon(materialKey) {
+            if (materialKey.includes('cotton') || materialKey.includes('fabric')) return 'fa-tshirt';
+            if (materialKey.includes('metal') || materialKey.includes('dust')) return 'fa-cog';
+            if (materialKey.includes('plastic') || materialKey.includes('pellet')) return 'fa-box';
+            return 'fa-industry';
+        }
+
+        function renderMatches(materialKey) {
+            let key = 'scrap cotton fabric';
+            if (materialKey.toLowerCase().includes('metal')) key = 'metal dust';
+            else if (materialKey.toLowerCase().includes('plastic') || materialKey.toLowerCase().includes('pellet')) key = 'plastic pellets';
+
+            const data = facilityDatabase[key] || facilityDatabase['scrap cotton fabric'];
+            const radius = parseInt(wasteRadius.value) || 150;
+            const filtered = data.filter(f => f.distance <= radius);
+
+            let html = '';
+            filtered.forEach((facility, index) => {
+                const matchClass = facility.match >= 90 ? 'high' : facility.match >= 85 ? 'medium' : 'low';
+                html += `
+                    <div class="match-card">
+                        <div class="facility-icon"><i class="fas ${getFacilityIcon(key)}"></i></div>
+                        <div class="facility-info">
+                            <div class="facility-name">${facility.name}</div>
+                            <div class="facility-detail">${facility.detail} • ${facility.distance} mi away • ${facility.price}</div>
+                        </div>
+                        <div class="match-score">
+                            ${facility.match}%
+                            <span class="score-bar"><span class="fill" style="width:${facility.match}%;"></span></span>
+                        </div>
+                        <div class="match-action">
+                            <button class="btn-match" onclick="alert('✅ Match confirmed with ${facility.name}\\n\\nMaterial: ${key}\\nVolume: ${wasteVolume.value}\\nDistance: ${facility.distance} miles\\nMatch Score: ${facility.match}%\\nPrice: ${facility.price}\\n\\nCycleLogic will coordinate logistics and quality verification.')">Match</button>
+                        </div>
+                    </div>
+                `;
+            });
+            matchesList.innerHTML = html || '<div style="padding:20px; text-align:center; color:#94a3b8;">No facilities found within the selected radius. Try expanding your search radius.</div>';
+            matchesCount.textContent = `${filtered.length} matches`;
+        }
+
+        matchBtn.addEventListener('click', () => {
+            matchesList.innerHTML = '<div style="padding:20px; text-align:center; color:#94a3b8;"><i class="fas fa-spinner fa-spin"></i> AI matching in progress...</div>';
+            setTimeout(() => {
+                renderMatches(wasteType.value);
+                updateMetrics();
+            }, 800);
+        });
+
+        function resetMatcher() {
+            wasteType.value = 'Scrap cotton fabric';
+            wasteVolume.value = '45 tons/month';
+            wasteLocation.value = 'Charlotte, NC';
+            wasteRadius.value = '150';
+            renderMatches('scrap cotton fabric');
+            updateMetrics();
+        }
+
+        function updateMetrics() {
+            const wasteDiverted = document.getElementById('wasteDiverted');
+            const revenuePotential = document.getElementById('revenuePotential');
+            const co2Avoided = document.getElementById('co2Avoided');
+            const avgDistance = document.getElementById('avgDistance');
+
+            if (wasteDiverted) wasteDiverted.textContent = `${Math.floor(400 + Math.random() * 300)} t/yr`;
+            if (revenuePotential) revenuePotential.textContent = `$${Math.floor(80 + Math.random() * 80)}K/yr`;
+            if (co2Avoided) co2Avoided.textContent = `${Math.floor(900 + Math.random() * 500)} t/yr`;
+            if (avgDistance) avgDistance.textContent = `${Math.floor(60 + Math.random() * 50)} mi`;
+        }
+
+        // Initialize
+        renderMatches('scrap cotton fabric');
+
+        // Update diversion bar
+        setInterval(() => {
+            const diversionFill = document.getElementById('diversionFill');
+            const diversionLabel = document.getElementById('diversionLabel');
+            if (diversionFill) {
+                const rate = Math.floor(74 + Math.random() * 20);
+                diversionFill.style.width = `${rate}%`;
+                diversionLabel.textContent = `${rate}%`;
+            }
+        }, 5000);
+
+        // Update flows periodically
+        setInterval(() => {
+            const flowList = document.getElementById('flowList');
+            if (flowList && flowList.children.length > 0) {
+                const flows = [
+                    { icon: 'fa-tshirt', text: 'Cotton Scrap', sub: '→ Insulation Co.' },
+                    { icon: 'fa-cog', text: 'Metal Dust', sub: '→ Alloy Recycler' },
+                    { icon: 'fa-box', text: 'HDPE Pellets', sub: '→ Packaging Mfr.' },
+                    { icon: 'fa-flask', text: 'Chemical Byproduct', sub: '→ Solvent Recovery' },
+                    { icon: 'fa-tree', text: 'Wood Chips', sub: '→ Particleboard Mfr.' },
+                ];
+                const firstItem = flowList.children[0];
+                if (firstItem) {
+                    const flowData = flows[Math.floor(Math.random() * flows.length)];
+                    const iconDiv = firstItem.querySelector('.flow-icon');
+                    const textDiv = firstItem.querySelector('div');
+                    iconDiv.innerHTML = `<i class="fas ${flowData.icon}"></i>`;
+                    textDiv.innerHTML = `<strong>${flowData.text}</strong><br /><span style="font-size:0.8rem;">${flowData.sub}</span>`;
+                    flowList.appendChild(firstItem);
+                }
+            }
+        }, 6000);
+
+        // Contact form
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('✅ Your demo request has been received! A CycleLogic specialist will contact you within 2 hours.');
+            this.reset();
+        });
+    </script>
+
+</body>
+</html>
